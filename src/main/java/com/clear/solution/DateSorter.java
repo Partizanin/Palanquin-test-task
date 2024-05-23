@@ -58,10 +58,4 @@ public class DateSorter {
                         .thenComparing(date -> !hasRInMonth.test(date), Comparator.reverseOrder()))
                 .toList();
     }
-
-    private boolean containRInMonthName(LocalDate it) {
-        String name = it.getMonth().name();
-        System.out.println(it + " " + name);
-        return name.toLowerCase().contains("r");
-    }
 }
