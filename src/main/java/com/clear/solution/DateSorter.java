@@ -1,26 +1,29 @@
-package sample;
+package com.clear.solution;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Marking will be based upon producing a readable, well engineered solution rather than factors
  * such as speed of processing or other performance-based optimizations, which are less
  * important.
- *
- *
- package sample;
-
- import java.time.LocalDate;
- import java.util.Collection;
- import java.util.List;
-
- /**
+ * <p>
+ * <p>
+ * package sample;
+ * <p>
+ * import java.time.LocalDate;
+ * import java.util.Collection;
+ * import java.util.List;
+ * <p>
+ * /**
  * Marking will be based upon producing a readable, well engineered solution rather than factors
  * such as speed of processing or other performance-based optimizations, which are less
  * important.
- *
+ * <p>
  * Implement in single class. Don't chane constructor and signature method.
  */
 public class DateSorter {
@@ -42,6 +45,20 @@ public class DateSorter {
      * @return the collection of dates now sorted as per the spec
      */
     public Collection<LocalDate> sortDates(List<LocalDate> unsortedDates) {
-        // your solution here
+        if (unsortedDates == null || unsortedDates.isEmpty()) {
+            throw new IllegalArgumentException("Unsorted dates cannot be empty or null");
+        }
+
+        ArrayList<LocalDate> datesWithR = unsortedDates.stream().filter(this::containRInMonthName).sorted().collect(Collectors.toCollection(ArrayList::new));
+        List<LocalDate> restOfDates = unsortedDates.stream().filter(it -> !containRInMonthName(it)).sorted(Comparator.reverseOrder()).toList();
+        datesWithR.addAll(restOfDates);
+
+        return datesWithR;
+    }
+
+    private boolean containRInMonthName(LocalDate it) {
+        String name = it.getMonth().name();
+        System.out.println(it + " " + name);
+        return name.toLowerCase().contains("r");
     }
 }
