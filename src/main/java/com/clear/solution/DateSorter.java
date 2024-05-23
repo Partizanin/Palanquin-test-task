@@ -1,11 +1,12 @@
 package com.clear.solution;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.time.Month;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Marking will be based upon producing a readable, well engineered solution rather than factors
@@ -49,11 +50,13 @@ public class DateSorter {
             throw new IllegalArgumentException("Unsorted dates cannot be empty or null");
         }
 
-        ArrayList<LocalDate> datesWithR = unsortedDates.stream().filter(this::containRInMonthName).sorted().collect(Collectors.toCollection(ArrayList::new));
-        List<LocalDate> restOfDates = unsortedDates.stream().filter(it -> !containRInMonthName(it)).sorted(Comparator.reverseOrder()).toList();
-        datesWithR.addAll(restOfDates);
+        Predicate<LocalDate> hasRInMonth = date -> date.getMonth().toString().toLowerCase().contains("r");
+        Function<LocalDate, Month> getMonth = LocalDate::getMonth;
 
-        return datesWithR;
+        return unsortedDates.stream()
+                .sorted(Comparator.comparing(getMonth, Comparator.naturalOrder())
+                        .thenComparing(date -> !hasRInMonth.test(date), Comparator.reverseOrder()))
+                .toList();
     }
 
     private boolean containRInMonthName(LocalDate it) {
